@@ -1,6 +1,7 @@
 /**
  * エラー内容をメール(Gmail)で送信する関数
- * @param {message} message 本文（エラー内容）
+ * @param {String} message 本文（エラー内容）
+ * @todo optionsは必要であれば追加してください。
  */
 function sendMail(message) {
   const recipient = emailAddress;
@@ -10,13 +11,8 @@ function sendMail(message) {
              + 'プロジェクト名: ' + projectName + '\n'
              + 'エラー内容:\n\n'
              + message;
-             
-  const options = {
-    from: emailAddress ,
-    name: 'sendGmailFromSSエラー通知'
-  };
 
-  GmailApp.sendEmail(recipient, subject, body, options);
+  GmailApp.sendEmail(recipient, subject, body);
 }
 
 function test(){
