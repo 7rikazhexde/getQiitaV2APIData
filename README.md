@@ -14,15 +14,39 @@ Qiita「設定」→「アプリケーション」→「個人用アクセスト
 * APIリクエストはGASの関数実行(手動、定期、チェックボックス操作)で送信します。
 * チェックボックス操作はPC、スマートフォンに対応し、```control```シートのチェックボックスを有効(TRUE)にするとスマホからAPIリクエストを送信し、正常終了、異常終了時に無効(```FALSE```)に変更します。
 * 複数回データ取得を行う場合は日付データを基準に重複する日付を特定して、行単位で最新データのみ残します。
+* エラー発生時は設定したメールアドレス宛にエラー内容を送信します。
 
 ## 設定と使い方
+### シート設定
+config.gs(```変数名```)に以下の設定情報を定義してください。  
+* スプレッドシートIDの設定(```spreadSheetID```)
 * qiitaアクセストークンを設定する
+  * [公式ドキュメント](https://qiita.com/api/v2/docs#認証認可)を参照し、トークンの発行および、設定をしてください。(```personalAccessToken```)
+* メールアドレスを設定する
+  * エラー発生時に設定したメール宛にエラー内容を送信します。(```emailAddress```)
+* プロジェクト名を設定する
+  * メール本文に記載されるプロジェクト名です。(```projectName```)
+
 * ```initSheet()```を実行して書込み先シートを作成する
   * ```initSheet()```では関連シート(```sum```,```view```,```like```,```stock```,```control```)を追加して初期値を設定します。
+
+* スコープ設定(```appsscript.json```) 
+**※ユーザー環境により異なります必要に応じて設定してください。**  
+関数の```@todo```を参照し、以下のスコープを設定してください。
+```json
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/script.external_request",
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/script.scriptapp"
+  ],
+```
+
+### アクセス許可
 * ```myFunction()```を実行してスクリプトからGoogleアカウントへのアクセスを許可する **(※初回実行時※2022/09/21現在)**
   * Googleスプレッドシー卜の参照、編集、作成、削除
   * 外部サービスへの接続
   * 自分がいないときにこのアプリケーションを実行できるようにする
+
 * スプレッドシート更新用イベントトリガーの設定 **(※スマートフォンから関数実行を有効にしたい場合)**
   * ```createEditTrigger()```を実行して、実行後に```onEdit(e)```を削除もしくはコメンアウトして```onEditCell(e)```のコメントアウトを外してください。
 * プロジェクトを定期実行設定 **(※定期実行を有効にする場合)**
@@ -31,16 +55,9 @@ Qiita「設定」→「アプリケーション」→「個人用アクセスト
     * このアプリケーションがインストールされているスプレッドシートの表示と管理
     * 外部サービスへの接続
     * 自分がいないときにこのアプリケーションを実行できるようにする
-* スコープ設定(```appsscript.json```) 
-**※ユーザー環境により異なります必要に応じて設定してください。**
-関数の```@todo```を参照し、以下のスコープを設定してください。
-```json
-  "oauthScopes": [
-   "https://www.googleapis.com/auth/script.external_request",
-   "https://www.googleapis.com/auth/spreadsheets",
-   "https://www.googleapis.com/auth/script.scriptapp"
-  ],
-```
+
+* Gmailへのアクセス許可設定
+  * Gmailのすべてのメールの閲覧、作成、送信、完全な削除 
 
 ### reference
 * fetch(url, params)
@@ -49,5 +66,3 @@ https://developers.google.com/apps-script/reference/url-fetch/url-fetch-app
 https://developers.google.com/apps-script/reference/spreadsheet/spreadsheet-app#getactive
 * newTrigger(functionName)
 https://developers.google.com/apps-script/reference/script/script-app#newTrigger(String)
-
-
