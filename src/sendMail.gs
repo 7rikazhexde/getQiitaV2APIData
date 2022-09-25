@@ -1,3 +1,7 @@
+/**
+ * エラー内容をメール(Gmail)で送信する関数
+ * @param {message} message 本文（エラー内容）
+ */
 function sendMail(message) {
   const recipient = emailAddress;
   const subject = '【GAS】エラー通知メール';
